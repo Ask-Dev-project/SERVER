@@ -16,11 +16,19 @@ const answer3 = {
     description: ''
 }
 
+const question1 = {
+    question: 'how?',
+    description: 'i dont know',
+    category: 'Javascript'
+}
+
+let PostId
 // let access_token
 let access_token_superuser
 let access_token_user
 let AnswerId
 let successAnswerId
+
 
 beforeAll((done) => {
     User.findOne({
@@ -64,9 +72,26 @@ afterAll((done) => {
 
 describe("CRUD answers", () => {
     describe("Success CRUD ", () => {
-        test("get all answers GET /answers", (done) => {
+        test("create post questions by superuser POST /posts", (done) => {
             request(app)
-                .get('/answers')
+                .post('/posts')
+                .send(question1)
+                .set('access_token', access_token_superuser)
+                .end(function (err, res) {
+                    const { body, status } = res
+                    PostId = res.body.id
+                    successPostId = res.body.id
+                    if (err) return done(err);
+                    expect(status).toBe(201)
+                    expect(body).toHaveProperty("question", question1.question)
+                    expect(body).toHaveProperty("description", question1.description)
+                    expect(body).toHaveProperty("category", question1.category)
+                    done();
+                })
+        }),
+        test("get all answers GET /answers/PostId", (done) => {
+            request(app)
+                .get('/answers/' + PostId )
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {
                     const { body, status } = res
@@ -77,7 +102,7 @@ describe("CRUD answers", () => {
         }),
         test("create answers by superuser POST /answers", (done) => {
             request(app)
-                .post('/answers')
+                .post('/answers/' + PostId)
                 .send(answer1)
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {
@@ -92,7 +117,7 @@ describe("CRUD answers", () => {
         }),
         test("update superuser answers PUT /answers/:id", (done) => {
             request(app)
-                .put(`/answers/${AnswerId}`)
+                .put(`/answers/${PostId}/${AnswerId}`)
                 .send(answer2)
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {
@@ -105,7 +130,7 @@ describe("CRUD answers", () => {
         }),
         test("create answers by user POST /answers", (done) => {
             request(app)
-                .post('/answers')
+                .post(`/answers/${PostId}`)
                 .send(answer1)
                 .set('access_token', access_token_user)
                 .end(function (err, res) {
@@ -120,7 +145,7 @@ describe("CRUD answers", () => {
         }),
         test("update user answers PUT /answers/:id", (done) => {
             request(app)
-                .put(`/answers/${AnswerId}`)
+                .put(`/answers/${PostId}/${AnswerId}`)
                 .send(answer2)
                 .set('access_token', access_token_user)
                 .end(function (err, res) {
@@ -135,7 +160,7 @@ describe("CRUD answers", () => {
     describe("Failed CRUD and success deleted", () => {
         test("failed create answers by superuser POST /answers with missing description field", (done) => {
             request(app)
-                .post('/answers')
+                .post(`/answers/${PostId}`)
                 .send(answer3)
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {
@@ -149,7 +174,7 @@ describe("CRUD answers", () => {
         }),
         test("failed create answers by user POST /answers with missing description field", (done) => {
             request(app)
-                .post('/answers')
+                .post(`/answers/${PostId}`)
                 .send(answer3)
                 .set('access_token', access_token_user)
                 .end(function (err, res) {
@@ -163,7 +188,7 @@ describe("CRUD answers", () => {
         }),
         test("failed update answers by superuser PUT /answers/:id missing description field", (done) => {
             request(app)
-                .put(`/answers/${AnswerId}`)
+                .put(`/answers/${PostId}/${AnswerId}`)
                 .send(answer3)
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {
@@ -176,7 +201,7 @@ describe("CRUD answers", () => {
         }),
         test("failed update answers by user PUT /answers/:id missing description field", (done) => {
             request(app)
-                .put(`/answers/${AnswerId}`)
+                .put(`/answers/${PostId}/${AnswerId}`)
                 .send(answer3)
                 .set('access_token', access_token_user)
                 .end(function (err, res) {
@@ -189,7 +214,7 @@ describe("CRUD answers", () => {
         }),       
         test("delete answers DELETE /answers/:id", (done) => {
             request(app)
-                .delete(`/answers/${successAnswerId}`)
+                .delete(`/answers/${PostId}/${successAnswerId}`)
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {
                     const { body, status } = res
