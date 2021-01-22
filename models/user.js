@@ -33,6 +33,9 @@ module.exports = (sequelize, DataTypes) => {
           } else {
             user.status = "user";
           }
+          if(!user.nickname){
+            user.nickname = user.email.split('@')[0] 
+          }  
         },
       },
     }
