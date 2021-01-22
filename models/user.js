@@ -1,7 +1,8 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
+const whitelist = {
+  'arul@gmail.com': true
+}
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -11,18 +12,30 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.hasMany(models.Post, {foreignKey: 'UserId'})
-      User.hasMany(models.Answer, {foreignKey: 'UserId'})
+      User.hasMany(models.Post, { foreignKey: "UserId" });
+      User.hasMany(models.Answer, { foreignKey: "UserId" });
     }
-  };
-  User.init({
-    email: DataTypes.STRING,
-    status: DataTypes.STRING,
-    nickname: DataTypes.STRING,
-    rating: DataTypes.FLOAT
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
+  }
+  User.init(
+    {
+      email: DataTypes.STRING,
+      status: DataTypes.STRING,
+      nickname: DataTypes.STRING,
+      rating: DataTypes.FLOAT,
+    },
+    {
+      sequelize,
+      modelName: "User",
+      hooks: {
+        beforeCreate(user) {
+          if (whitelist[user.email] == true) {
+            user.status = "superuser";
+          } else {
+            user.status = "user";
+          }
+        },
+      },
+    }
+  );
   return User;
 };
