@@ -28,6 +28,7 @@ class UserController {
       } else {
         const createUser = await User.create({
           email: payload.email,
+          nickname: payload.email.split('@')[0]
         });
         const token = Jwt.Sign({
           id: createUser.id,
