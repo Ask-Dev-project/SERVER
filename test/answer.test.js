@@ -62,7 +62,7 @@ afterAll((done) => {
 });
 
 
-describe("CRUD posts", () => {
+describe("CRUD answers", () => {
     describe("Success CRUD ", () => {
         test("get all answers GET /answers", (done) => {
             request(app)
@@ -75,27 +75,25 @@ describe("CRUD posts", () => {
                     done();
                 })
         }),
-        test("create answers by superuser POST /posts", (done) => {
+        test("create answers by superuser POST /answers", (done) => {
             request(app)
-                .post('/posts')
+                .post('/answers')
                 .send(answer1)
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {
                     const { body, status } = res
-                    PostId = res.body.id
-                    successPostId = res.body.id
+                    AnswerId = res.body.id
+                    successAnswerId = res.body.id
                     if (err) return done(err);
                     expect(status).toBe(201)
-                    expect(body).toHaveProperty("question", answer1.question)
                     expect(body).toHaveProperty("description", answer1.description)
-                    expect(body).toHaveProperty("category", answer1.category)
                     done();
                 })
         }),
-        test("update superuser posts PUT /posts/:id", (done) => {
+        test("update superuser answers PUT /answers/:id", (done) => {
             request(app)
-                .put(`/posts/${PostId}`)
-                .send(question2)
+                .put(`/answers/${AnswerId}`)
+                .send(answer2)
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {
                     const { body, status } = res
@@ -105,27 +103,25 @@ describe("CRUD posts", () => {
                     done();
                 })
         }),
-        test("create post questions by user POST /posts", (done) => {
+        test("create answers by user POST /answers", (done) => {
             request(app)
-                .post('/posts')
+                .post('/answers')
                 .send(answer1)
                 .set('access_token', access_token_user)
                 .end(function (err, res) {
                     const { body, status } = res
-                    PostId = res.body.id
-                    successPostId = res.body.id
+                    AnswerId = res.body.id
+                    successAnswerId = res.body.id
                     if (err) return done(err);
                     expect(status).toBe(201)
-                    expect(body).toHaveProperty("question", answer1.question)
                     expect(body).toHaveProperty("description", answer1.description)
-                    expect(body).toHaveProperty("category", answer1.category)
                     done();
                 })
         }),
-        test("update user posts PUT /posts/:id", (done) => {
+        test("update user answers PUT /answers/:id", (done) => {
             request(app)
-                .put(`/posts/${PostId}`)
-                .send(question2)
+                .put(`/answers/${AnswerId}`)
+                .send(answer2)
                 .set('access_token', access_token_user)
                 .end(function (err, res) {
                     const { body, status } = res
@@ -137,79 +133,38 @@ describe("CRUD posts", () => {
         })
     }),
     describe("Failed CRUD and success deleted", () => {
-        test("failed create posts questions by superuser POST /posts with missing question field", (done) => {
+        test("failed create answers by superuser POST /answers with missing description field", (done) => {
             request(app)
-                .post('/posts')
-                .send(question3)
+                .post('/answers')
+                .send(answer3)
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {
                     const { body, status } = res
-                    productId = res.body.id
-                    if (err) return done(err);
-                    expect(status).toBe(400)
-                    expect(body).toHaveProperty("message", "Question is required")
-                    done();
-                })
-        }),
-        test("failed create posts questions by superuser POST /posts with missing description field", (done) => {
-            request(app)
-                .post('/posts')
-                .send(question4)
-                .set('access_token', access_token_superuser)
-                .end(function (err, res) {
-                    const { body, status } = res
-                    productId = res.body.id
+                    AnswerId = res.body.id
                     if (err) return done(err);
                     expect(status).toBe(400)
                     expect(body).toHaveProperty("message", "Description is required")
                     done();
                 })
         }),
-        test("failed create posts questions by user POST /posts with missing question field", (done) => {
+        test("failed create answers by user POST /answers with missing description field", (done) => {
             request(app)
-                .post('/posts')
-                .send(question3)
+                .post('/answers')
+                .send(answer3)
                 .set('access_token', access_token_user)
                 .end(function (err, res) {
                     const { body, status } = res
-                    productId = res.body.id
-                    if (err) return done(err);
-                    expect(status).toBe(400)
-                    expect(body).toHaveProperty("message", "Question is required")
-                    done();
-                })
-        }),
-        test("failed create posts questions by user POST /posts with missing description field", (done) => {
-            request(app)
-                .post('/posts')
-                .send(question4)
-                .set('access_token', access_token_user)
-                .end(function (err, res) {
-                    const { body, status } = res
-                    productId = res.body.id
+                    AnswerId = res.body.id
                     if (err) return done(err);
                     expect(status).toBe(400)
                     expect(body).toHaveProperty("message", "Description is required")
                     done();
                 })
         }),
-        test("failed update posts questions by superuser PUT /posts/:id missing question field", (done) => {
+        test("failed update answers by superuser PUT /answers/:id missing description field", (done) => {
             request(app)
-                .put(`/posts/${PostId}`)
-                .send(question3)
-                .set('access_token', access_token_superuser)
-                .end(function (err, res) {
-                    const { body, status } = res
-                    if (err) return done(err);
-                    expect(status).toBe(400)
-                    expect(body).toHaveProperty('message', 'Question is required')
-                    done();
-                })
-        }),
-        test("failed update posts questions by superuser PUT /posts/:id missing description field", (done) => {
-            request(app)
-                .put(`/posts/${PostId}`)
-                .send(question4)
+                .put(`/answers/${AnswerId}`)
+                .send(answer3)
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {
                     const { body, status } = res
@@ -219,23 +174,10 @@ describe("CRUD posts", () => {
                     done();
                 })
         }),
-        test("failed update posts questions by user PUT /posts/:id missing question field", (done) => {
+        test("failed update answers by user PUT /answers/:id missing description field", (done) => {
             request(app)
-                .put(`/posts/${PostId}`)
-                .send(question3)
-                .set('access_token', access_token_user)
-                .end(function (err, res) {
-                    const { body, status } = res
-                    if (err) return done(err);
-                    expect(status).toBe(400)
-                    expect(body).toHaveProperty('message', 'Question is required')
-                    done();
-                })
-        }),
-        test("failed update posts questions by user PUT /posts/:id missing description field", (done) => {
-            request(app)
-                .put(`/posts/${PostId}`)
-                .send(question4)
+                .put(`/answers/${AnswerId}`)
+                .send(answer3)
                 .set('access_token', access_token_user)
                 .end(function (err, res) {
                     const { body, status } = res
@@ -245,9 +187,9 @@ describe("CRUD posts", () => {
                     done();
                 })
         }),       
-        test("delete posts questions DELETE /posts/:id", (done) => {
+        test("delete answers DELETE /answers/:id", (done) => {
             request(app)
-                .delete(`/posts/${successPostId}`)
+                .delete(`/answers/${successAnswerId}`)
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {
                     const { body, status } = res
