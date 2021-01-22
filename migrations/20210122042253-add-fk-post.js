@@ -10,7 +10,7 @@ module.exports = {
      */
     await queryInterface.addColumn("Posts", "UserId", {
       type: Sequelize.INTEGER,
-      refences: {
+      references: {
         model: {
           tableName: "Users",
         },
