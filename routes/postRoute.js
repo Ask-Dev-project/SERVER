@@ -4,6 +4,7 @@ const authentication = require('../midddlewares/authentication')
 
 route.use(authentication)
 route.get('/', PostController.getAll)
+route.get('/category', PostController.getByCategory)
 route.get('/:PostId', PostController.getById)
 route.post('/', PostController.create)
 route.put('/:PostId', PostController.update)

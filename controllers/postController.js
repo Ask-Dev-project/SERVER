@@ -41,6 +41,30 @@ class PostController {
       next(error);
     }
   }
+  static async getByCategory(req, res, next) {
+    const user = req.loggedInUser;
+    const category = req.body.category;
+    try {
+      const posts = await Post.findAll({
+        where: {
+          UserId: user.id,
+          category: category,
+        },
+        order: ["id", "ASC"],
+        include: [
+          {
+            model: User,
+          },
+          {
+            model: Answer,
+          },
+        ],
+      });
+      res.status(200).json(posts);
+    } catch (error) {
+      next(error);
+    }
+  }
   static async create(req, res, next) {
     const user = req.loggedInUser;
     const { question, description, category } = req.body;
