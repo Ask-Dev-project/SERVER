@@ -28,7 +28,7 @@ class UserController {
       } else {
         const createUser = await User.create({
           email: payload.email,
-          nickname: payload.email.split('@')[0]
+          nickname: payload.email.split("@")[0],
         });
         const token = Jwt.Sign({
           id: createUser.id,
@@ -38,6 +38,22 @@ class UserController {
         });
         res.status(200).json(token);
       }
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async changeNickname(req, res, next) {
+    try {
+      const user = req.loggedInUser;
+      const { nickname } = req.body;
+      User.update(
+        { nickname },
+        {
+          where: {
+            id: user.id,
+          },
+        }
+      );
     } catch (error) {
       next(error);
     }
