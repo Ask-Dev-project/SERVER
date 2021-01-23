@@ -16,7 +16,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Answer.init({
-    description: DataTypes.TEXT
+    description: {
+      type: DataTypes.TEXT,
+      validate: {
+        notEmpty: {
+          msg: 'Description is required'
+        }
+      }
+    },
+    UserId: DataTypes.INTEGER,
+    PostId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Answer',

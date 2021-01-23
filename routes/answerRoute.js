@@ -1,7 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const AnswerController = require('../controllers/answerController')
+const authentication = require('../midddlewares/authentication')
 
+router.use(authentication)
 router.get('/:PostId', AnswerController.getAnswers)
 router.get('/:PostId/:id', AnswerController.getAnswersById)
 router.put('/:PostId/:id', AnswerController.editAnswers)
