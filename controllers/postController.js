@@ -47,7 +47,6 @@ class PostController {
     try {
       const posts = await Post.findAll({
         where: {
-          UserId: 1,// user.id,
           category: category,
         },
         order: [["id", "ASC"]],
