@@ -5,9 +5,9 @@ class PostController {
     const user = req.loggedInUser;
     try {
       const posts = await Post.findAll({
-        where: {
-          UserId: user.id,
-        },
+        // where: {
+        //   UserId: user.id,
+        // },
         order: ["id", "ASC"],
         include: [
           {
@@ -47,7 +47,6 @@ class PostController {
     try {
       const posts = await Post.findAll({
         where: {
-          UserId: user.id,
           category: category,
         },
         order: ["id", "ASC"],
