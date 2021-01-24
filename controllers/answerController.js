@@ -33,7 +33,8 @@ class AnswerController {
 
   static editAnswers(req, res, next) {
     const { description } = req.body;
-    console.log(req.params);
+    // console.log('wkwk')
+    // console.log(Object.keys(req), 'hohoi');
     Answer.update(
       {
         description,
@@ -41,8 +42,8 @@ class AnswerController {
       {
         where: {
           id: +req.params.id,
-          UserId: 1, //req.userLogin // nunggu dari auth nama variabelnya
           PostId: req.params.PostId,
+          UserId: req.loggedInUser.id,
         },
       }
     )
@@ -56,10 +57,11 @@ class AnswerController {
 
   static createAnswers(req, res, next) {
     const { description } = req.body;
+    console.log(req.loggedInUser, 'lalala')
     Answer.create({
       description,
       PostId: req.params.PostId,
-      UserId: 1, // dari userLogin sda
+      UserId: req.loggedInUser.id
     })
       .then((data) => {
         res.status(201).json(data);
