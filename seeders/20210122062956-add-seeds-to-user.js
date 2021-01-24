@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -10,31 +10,53 @@ module.exports = {
      *   name: 'John Doe',
      *   isBetaMember: false
      * }], {});
-    */
-   await queryInterface.bulkInsert('Users', [{
-    email: "abc@mail.com",
-    status: "superuser",
-    nickname: 'John',
-    rating: 8.2,
-    createdAt: new Date(),
-    updatedAt: new Date()
-   },
-   {
-    email: "admin@mail.com",
-    status: "superuser",
-    nickname: 'Doe',
-    rating: 9.4,
-    createdAt: new Date(),
-    updatedAt: new Date()
-   },
-   {
-    email: "customer@mail.com",
-    status: "user",
-    nickname: 'Doe',
-    rating: 9.4,
-    createdAt: new Date(),
-    updatedAt: new Date()
-   }], {} )
+     */
+    await queryInterface.bulkInsert(
+      "Users",
+      [
+        {
+          email: "john.doe@mail.com",
+          status: "superuser",
+          nickname: "John",
+          rating: 8.2,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          email: "shouw.michael@mail.com",
+          status: "superuser",
+          nickname: "michael",
+          rating: 9.4,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          email: "tatang.sudanawan@mail.com",
+          status: "user",
+          nickname: "tasudan",
+          rating: 9.4,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          email: "esih_sukaesih@mail.com",
+          status: "user",
+          nickname: "esih",
+          rating: 9.4,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          email: "ujang.rambo@mail.com",
+          status: "user",
+          nickname: "ujang_rambo",
+          rating: 9.4,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
+      {}
+    );
   },
 
   down: async (queryInterface, Sequelize) => {
@@ -44,6 +66,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete('Users', null, {});
-  }
+    await queryInterface.bulkDelete("Users", null, {});
+  },
 };
