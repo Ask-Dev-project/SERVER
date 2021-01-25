@@ -31,8 +31,8 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          question: "Mengapa program Hello World saya tidak muncul",
-          description: "Saya sedang memulai belajar bahasa java, tapi program Hello World saya tidak muncul",
+          question: "Tools apa saja yang digunakan untuk belajar Java?",
+          description: "Suhu mohon pencerahannya, saya tidak tahu tools apa saja yang digunakan untuk belajar java",
           category: "Java",
           UserId: 5,
           createdAt: new Date(),
