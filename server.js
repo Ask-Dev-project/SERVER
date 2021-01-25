@@ -20,7 +20,10 @@ app.get('/listRoom',(req,res)=> {
 })
 
 io.on('connection', socket => {
-
+  
+  socket.on('send-chat', obj => {
+    socket.to(obj.roomId).broadcast.emit('receive-chat',obj.message)
+  })
   socket.on('join-room', (roomId, userId,jwt) => {
     if(rooms[roomId]) {
       rooms[roomId][jwt] = userId
