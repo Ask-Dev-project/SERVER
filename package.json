@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --runInBand --detectOpenHandles --forceExit --coverage",
-    "start": "node server"
+    "start": "npx sequelize db:drop && npx sequelize db:create && npx sequelize db:migrate && npx sequelize db:seed:all && node server.js"
   },
   "repository": {
     "type": "git",
