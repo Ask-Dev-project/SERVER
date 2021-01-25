@@ -2,6 +2,7 @@ const app = require('../app')
 const request = require('supertest')
 const { User, sequelize } = require('../models')
 const { Sign } = require('../helper/jwt') 
+const Jwt = require('../helper/jwt')
 const { queryInterface } = sequelize
 
 const answer1 = {
@@ -32,7 +33,7 @@ let successAnswerId
 beforeAll((done) => {
     User.findOne({
             where: {
-                email: "admin@mail.com"
+                email: "john.doe@mail.com"
             }
         })
         .then(superuser => {
@@ -42,7 +43,7 @@ beforeAll((done) => {
             })
             return User.findOne({
                 where: {
-                    email: "customer@mail.com"
+                    email: "tatang.sudanawan@mail.com"
                 }
             })
         })
@@ -90,7 +91,7 @@ describe("CRUD answers", () => {
         }),
         test("get all answers GET /answers/PostId", (done) => {
             request(app)
-                .get('/answers/' + PostId )
+                .get(`/answers/${PostId}` )
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {
                     const { body, status } = res
@@ -113,19 +114,30 @@ describe("CRUD answers", () => {
                     expect(body).toHaveProperty("description", answer1.description)
                     done();
                 })
-        }),
-        test("update superuser answers PUT /answers/:PostId/:id", (done) => {
+            }),
+        test("get answers GET /answers/PostId/AnswerId", (done) => {
             request(app)
-                .put(`/answers/${PostId}/${AnswerId}`)
-                .send(answer2)
+                .get(`/answers/${PostId}/${AnswerId}` )
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {
                     const { body, status } = res
                     if (err) return done(err);
                     expect(status).toBe(200)
-                    expect(body).toHaveProperty("message", "Data success updated")
                     done();
                 })
+        }),
+        test("update superuser answers PUT /answers/:PostId/:id", (done) => {
+            request(app)
+            .put(`/answers/${PostId}/${AnswerId}`)
+            .send(answer2)
+            .set('access_token', access_token_superuser)
+            .end(function (err, res) {
+                const { body, status } = res
+                if (err) return done(err);
+                expect(status).toBe(200)
+                expect(body).toHaveProperty("message", "Data success updated")
+                done();
+            })
         }),
         test("create answers by user POST /answers/PostId", (done) => {
             request(app)
@@ -157,6 +169,30 @@ describe("CRUD answers", () => {
         })
     }),
     describe("Failed CRUD and success deleted", () => {
+        test("failed get all answers GET /answers/PostId", (done) => {
+            request(app)
+                .get('/answers/a' )
+                .set('access_token', access_token_superuser)
+                .end(function (err, res) {
+                    const { body, status } = res
+                    if (err) return done(err);
+                    expect(status).toBe(500)
+                    expect(body).toHaveProperty("message", "Internal Server Error!")
+                    done();
+                })
+        }),
+        test("failed get answers GET /answers/PostId/AnswerId", (done) => {
+            request(app)
+                .get(`/answers/${PostId}/a` )
+                .set('access_token', access_token_superuser)
+                .end(function (err, res) {
+                    const { body, status } = res
+                    if (err) return done(err);
+                    expect(status).toBe(500)
+                    expect(body).toHaveProperty("message", "Internal Server Error!")
+                    done();
+                })
+        }),
         test("failed create answers by superuser POST /answers with missing description field", (done) => {
             request(app)
                 .post(`/answers/${PostId}`)
@@ -210,7 +246,20 @@ describe("CRUD answers", () => {
                     expect(body).toHaveProperty('message', 'Description is required')
                     done();
                 })
-        }),       
+        }), 
+        test("failed delete answers DELETE /answers/:id", (done) => {
+            let fakeJwt = Jwt.Sign({id:5000, email: 'ngasal@mail.com'})
+            request(app)
+                .delete(`/answers/${PostId}/a`)
+                .set('access_token', access_token_user)
+                .end(function (err, res) {
+                    const { body, status } = res
+                    if (err) return done(err);
+                    expect(status).toBe(500)
+                    expect(body).toHaveProperty("message", "Internal Server Error!")
+                    done();
+                })
+        }),      
         test("delete answers DELETE /answers/:id", (done) => {
             request(app)
                 .delete(`/answers/${PostId}/${successAnswerId}`)

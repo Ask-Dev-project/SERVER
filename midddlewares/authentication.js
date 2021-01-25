@@ -5,15 +5,21 @@ const createError = require("http-errors");
 module.exports = async (req, res, next) => {
   try {
     req.loggedInUser = Jwt.Verify(req.headers.access_token);
-    console.log(req.loggedInUser, "<<<<<<<<<<<<< req login User");
-    const user = User.findByPk(req.loggedInUser.id);
+    // console.log(req.loggedInUser, "<<<<<<<<<<<<< req login User");
+    const user = await User.findByPk(req.loggedInUser.id);
     if (!user) {
-      throw createError(404, "User not found!");
+      console.log('masuk fake')
+      throw {
+        name: 'Expired-token',
+        status: 404,
+        message: 'Internal Server Error'
+      }
     } else {
       next();
     }
-  } catch (err) {
-    console.log(err, "<<<<<< dari catch error handler");
-    next(err);
+  } 
+  catch (err) {
+    console.log('masuk fake 2')
+    next(err)
   }
 };

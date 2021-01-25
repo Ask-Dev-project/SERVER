@@ -1,4 +1,4 @@
-const { Answer } = require("../models");
+const { Answer, User } = require("../models");
 
 class AnswerController {
   static getAnswers(req, res, next) {
@@ -7,6 +7,11 @@ class AnswerController {
         PostId: req.params.PostId,
       },
       order: [["id", "ASC"]],
+      include: [
+        {
+          model: User,
+        }
+      ]
     })
       .then((data) => {
         res.status(200).json(data);
@@ -76,14 +81,14 @@ class AnswerController {
       where: {
         PostId: req.params.PostId,
         id: req.params.id,
-        UserId: 1, // dari userLogin
+        UserId: req.loggedInUser.id, // dari userLogin
       },
     })
       .then(() => {
-        // console.log(data, "<<<");
         res.status(200).json({ message: "Data success deleted" });
       })
       .catch((err) => {
+        console.log('masuk error')
         next(err);
       });
   }

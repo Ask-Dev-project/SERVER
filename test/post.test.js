@@ -2,6 +2,7 @@ const app = require('../app')
 const request = require('supertest')
 const { User, sequelize } = require('../models')
 const { Sign } = require('../helper/jwt')
+const Jwt = require('../helper/jwt')
 const { queryInterface } = sequelize
 
 const question1 = {
@@ -33,11 +34,12 @@ let access_token_superuser
 let access_token_user
 let PostId
 let successPostId
+let category
 
 beforeAll((done) => {
     User.findOne({
         where: {
-            email: "admin@mail.com"
+            email: "john.doe@mail.com"
         }
     })
     .then(superuser => {
@@ -47,7 +49,7 @@ beforeAll((done) => {
         })
         return User.findOne({
             where: {
-                email: "customer@mail.com"
+                email: "tatang.sudanawan@mail.com"
             }
         })
     })
@@ -78,14 +80,14 @@ describe("CRUD posts", () => {
     describe("Success CRUD ", () => {
         test("get all posts GET /post", (done) => {
             request(app)
-                .get('/post')
-                .set('access_token', access_token_superuser)
-                .end(function (err, res) {
-                    const { body, status } = res
-                    if (err) return done(err);
-                    expect(status).toBe(200)
-                    done();
-                })
+            .get('/post')
+            .set('access_token', access_token_superuser)
+            .end(function (err, res) {
+                const { body, status } = res
+                if (err) return done(err);
+                expect(status).toBe(200)
+                done();
+            })
         }),
         test("create post questions by superuser POST /post", (done) => {
             request(app)
@@ -96,6 +98,7 @@ describe("CRUD posts", () => {
                     const { body, status } = res
                     PostId = res.body.id
                     successPostId = res.body.id
+                    category = res.body.category
                     if (err) return done(err);
                     expect(status).toBe(201)
                     expect(body).toHaveProperty("question", question1.question)
@@ -103,20 +106,43 @@ describe("CRUD posts", () => {
                     expect(body).toHaveProperty("category", question1.category)
                     done();
                 })
-            }),
-            test("update superuser posts PUT /posts/:id", (done) => {
-                request(app)
-                .put(`/post/${PostId}`)
-                .send(question2)
+        }),
+        test("get posts GET /post/id", (done) => {
+            request(app)
+                .get(`/post/${PostId}`)
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {
-                    console.log('masuk pak eko')
                     const { body, status } = res
                     if (err) return done(err);
-                    expect(status).toBe(201)
-                    expect(body).toHaveProperty("message", "Data success updated")
+                    expect(status).toBe(200)
                     done();
                 })
+        }),
+        // test("get posts by category GET /post/category", (done) => {
+        //     console.log(category, 'ini laiii')
+        //     request(app)
+        //         .get(`/post/${category}`)
+        //         .set('access_token', access_token_superuser)
+        //         .end(function (err, res) {
+        //             const { body, status } = res
+        //             if (err) return done(err);
+        //             expect(status).toBe(200)
+        //             done();
+        //         })
+        // }),
+        test("update superuser posts PUT /posts/:id", (done) => {
+            request(app)
+            .put(`/post/${PostId}`)
+            .send(question2)
+            .set('access_token', access_token_superuser)
+            .end(function (err, res) {
+                console.log('masuk pak eko')
+                const { body, status } = res
+                if (err) return done(err);
+                expect(status).toBe(201)
+                expect(body).toHaveProperty("message", "Data success updated")
+                done();
+            })
         }),
         test("create post questions by user POST /posts", (done) => {
             request(app)
@@ -150,6 +176,18 @@ describe("CRUD posts", () => {
         })
     }),
     describe("Failed CRUD and success deleted", () => {
+        test("failed get all posts GET /post/id", (done) => {
+            request(app)
+                .get('/post/a')
+                .set('access_token', access_token_superuser)
+                .end(function (err, res) {
+                    const { body, status } = res
+                    if (err) return done(err);
+                    expect(status).toBe(500)
+                    expect(body).toHaveProperty("message", "Internal Server Error!")
+                    done();
+                })
+        }),
         test("failed create posts questions by superuser POST /posts with missing question field", (done) => {
             request(app)
                 .post('/post')
@@ -161,6 +199,19 @@ describe("CRUD posts", () => {
                     if (err) return done(err);
                     expect(status).toBe(400)
                     expect(body).toHaveProperty("message", "Question is required")
+                    done();
+                })
+        }),
+        test("failed create post questions by superuser POST /post because expired jwt", (done) => {
+            let fakeJwt = Jwt.Sign({id:5000, email:'fake@email.com'})
+            request(app)
+                .post('/post')
+                .send(question1)
+                .set('access_token', fakeJwt)
+                .end(function (err, res) {
+                    const { body, status } = res
+                    if (err) return done(err);
+                    expect(status).toBe(404)
                     done();
                 })
         }),
