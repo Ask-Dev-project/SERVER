@@ -4,7 +4,7 @@ class PostController {
   static async getAll(req, res, next) {
     try {
       const posts = await Post.findAll({
-        order: [["id", "ASC"]],
+        order: [["id", "DESC"]],
         include: [
           {
             model: User,
@@ -38,12 +38,13 @@ class PostController {
     }
   }
   static async getByCategory(req, res, next) {
+    console.log(req.query.name)
     try {
       const posts = await Post.findAll({
         where: {
           category: req.query.name,
         },
-        order: [["id", "ASC"]],
+        order: [["id", "DESC"]],
         include: [
           {
             model: User,

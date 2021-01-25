@@ -25,7 +25,7 @@ module.exports = {
         {
           question: "Saya tidak tahu error nya di mana",
           description: "Saya sedang membuat program menggunakan conditional, tetapi saya tidak tahu error nya di mana",
-          category: "C++",
+          category: "Cpp",
           UserId: 4,
           createdAt: new Date(),
           updatedAt: new Date(),
