@@ -47,10 +47,11 @@ class UserController {
     }
   }
   static async changeNickname(req, res, next) {
+    console.log('masukk')
+    const user = req.loggedInUser;
+    const { nickname } = req.body;
     try {
-      const user = req.loggedInUser;
-      const { nickname } = req.body;
-      User.update(
+      const updateData = await User.update(
         { nickname },
         {
           where: {
@@ -58,6 +59,7 @@ class UserController {
           },
         }
       );
+      res.status(201).json({message: 'Data success updated'});
     } catch (error) {
       next(error);
     }

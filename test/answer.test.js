@@ -71,7 +71,7 @@ afterAll((done) => {
 
 describe("CRUD answers", () => {
     describe("Success CRUD ", () => {
-        test.only("create post questions by superuser POST /posts", (done) => {
+        test("create post questions by superuser POST /posts", (done) => {
             request(app)
                 .post('/post')
                 .send(question1)
@@ -88,7 +88,7 @@ describe("CRUD answers", () => {
                     done();
                 })
         }),
-        test.only("get all answers GET /answers/PostId", (done) => {
+        test("get all answers GET /answers/PostId", (done) => {
             request(app)
                 .get('/answers/' + PostId )
                 .set('access_token', access_token_superuser)
@@ -99,7 +99,7 @@ describe("CRUD answers", () => {
                     done();
                 })
         }),
-        test.only("create answers by superuser POST /answers/PostId", (done) => {
+        test("create answers by superuser POST /answers/PostId", (done) => {
             request(app)
                 .post(`/answers/${PostId}`)
                 .send(answer1)
@@ -114,7 +114,7 @@ describe("CRUD answers", () => {
                     done();
                 })
         }),
-        test.only("update superuser answers PUT /answers/:PostId/:id", (done) => {
+        test("update superuser answers PUT /answers/:PostId/:id", (done) => {
             request(app)
                 .put(`/answers/${PostId}/${AnswerId}`)
                 .send(answer2)
@@ -127,7 +127,7 @@ describe("CRUD answers", () => {
                     done();
                 })
         }),
-        test.only("create answers by user POST /answers/PostId", (done) => {
+        test("create answers by user POST /answers/PostId", (done) => {
             request(app)
                 .post(`/answers/${PostId}`)
                 .send(answer1)
@@ -142,7 +142,7 @@ describe("CRUD answers", () => {
                     done();
                 })
         }),
-        test.only("update user answers PUT /answers/PostId/:id", (done) => {
+        test("update user answers PUT /answers/PostId/:id", (done) => {
             request(app)
                 .put(`/answers/${PostId}/${AnswerId}`)
                 .send(answer2)
@@ -157,7 +157,7 @@ describe("CRUD answers", () => {
         })
     }),
     describe("Failed CRUD and success deleted", () => {
-        test.only("failed create answers by superuser POST /answers with missing description field", (done) => {
+        test("failed create answers by superuser POST /answers with missing description field", (done) => {
             request(app)
                 .post(`/answers/${PostId}`)
                 .send(answer3)
@@ -171,7 +171,7 @@ describe("CRUD answers", () => {
                     done();
                 })
         }),
-        test.only("failed create answers by user POST /answers with missing description field", (done) => {
+        test("failed create answers by user POST /answers with missing description field", (done) => {
             request(app)
                 .post(`/answers/${PostId}`)
                 .send(answer3)
@@ -185,7 +185,7 @@ describe("CRUD answers", () => {
                     done();
                 })
         }),
-        test.only("failed update answers by superuser PUT /answers/:id missing description field", (done) => {
+        test("failed update answers by superuser PUT /answers/:id missing description field", (done) => {
             request(app)
                 .put(`/answers/${PostId}/${AnswerId}`)
                 .send(answer3)
@@ -198,7 +198,7 @@ describe("CRUD answers", () => {
                     done();
                 })
         }),
-        test.only("failed update answers by user PUT /answers/:id missing description field", (done) => {
+        test("failed update answers by user PUT /answers/:id missing description field", (done) => {
             request(app)
                 .put(`/answers/${PostId}/${AnswerId}`)
                 .send(answer3)
@@ -211,7 +211,7 @@ describe("CRUD answers", () => {
                     done();
                 })
         }),       
-        test.only("delete answers DELETE /answers/:id", (done) => {
+        test("delete answers DELETE /answers/:id", (done) => {
             request(app)
                 .delete(`/answers/${PostId}/${successAnswerId}`)
                 .set('access_token', access_token_superuser)

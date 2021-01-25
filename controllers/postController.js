@@ -6,7 +6,7 @@ class PostController {
     try {
       const posts = await Post.findAll({
         where: {
-          UserId: 1 //user.id,
+          UserId: user.id,
         },
         order: [["id", "ASC"]],
         include: [
@@ -98,7 +98,7 @@ class PostController {
           returning: true,
         }
       );
-      res.status(201).json({message: 'Data success updated'});
+      res.status(201).json({message: 'Data success updated'})
       // res.status(201).json(post);
     } catch (error) {
       next(error);
