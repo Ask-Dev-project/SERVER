@@ -2,12 +2,8 @@ const { User, Answer, Post } = require("../models/index");
 
 class PostController {
   static async getAll(req, res, next) {
-    const user = req.loggedInUser;
     try {
       const posts = await Post.findAll({
-        where: {
-          UserId: user.id,
-        },
         order: [["id", "ASC"]],
         include: [
           {
@@ -42,12 +38,10 @@ class PostController {
     }
   }
   static async getByCategory(req, res, next) {
-    const user = req.loggedInUser;
-    const category = req.body.category;
     try {
       const posts = await Post.findAll({
         where: {
-          category: category,
+          category: req.query.name,
         },
         order: [["id", "ASC"]],
         include: [
