@@ -76,7 +76,7 @@ afterAll((done) => {
 
 describe("CRUD posts", () => {
     describe("Success CRUD ", () => {
-        test.only("get all posts GET /post", (done) => {
+        test("get all posts GET /post", (done) => {
             request(app)
                 .get('/post')
                 .set('access_token', access_token_superuser)
@@ -87,7 +87,7 @@ describe("CRUD posts", () => {
                     done();
                 })
         }),
-        test.only("create post questions by superuser POST /post", (done) => {
+        test("create post questions by superuser POST /post", (done) => {
             request(app)
                 .post('/post')
                 .send(question1)
@@ -104,7 +104,7 @@ describe("CRUD posts", () => {
                     done();
                 })
             }),
-            test.only("update superuser posts PUT /posts/:id", (done) => {
+            test("update superuser posts PUT /posts/:id", (done) => {
                 request(app)
                 .put(`/post/${PostId}`)
                 .send(question2)
@@ -118,7 +118,7 @@ describe("CRUD posts", () => {
                     done();
                 })
         }),
-        test.only("create post questions by user POST /posts", (done) => {
+        test("create post questions by user POST /posts", (done) => {
             request(app)
                 .post('/post')
                 .send(question1)
@@ -135,7 +135,7 @@ describe("CRUD posts", () => {
                     done();
                 })
         }),
-        test.only("update user posts PUT /posts/:id", (done) => {
+        test("update user posts PUT /posts/:id", (done) => {
             request(app)
                 .put(`/post/${PostId}`)
                 .send(question2)
@@ -150,7 +150,7 @@ describe("CRUD posts", () => {
         })
     }),
     describe("Failed CRUD and success deleted", () => {
-        test.only("failed create posts questions by superuser POST /posts with missing question field", (done) => {
+        test("failed create posts questions by superuser POST /posts with missing question field", (done) => {
             request(app)
                 .post('/post')
                 .send(question3)
@@ -164,7 +164,7 @@ describe("CRUD posts", () => {
                     done();
                 })
         }),
-        test.only("failed create posts questions by superuser POST /posts with missing description field", (done) => {
+        test("failed create posts questions by superuser POST /posts with missing description field", (done) => {
             request(app)
                 .post('/post')
                 .send(question4)
@@ -178,7 +178,7 @@ describe("CRUD posts", () => {
                     done();
                 })
         }),
-        test.only("failed create posts questions by user POST /posts with missing question field", (done) => {
+        test("failed create posts questions by user POST /posts with missing question field", (done) => {
             request(app)
                 .post('/post')
                 .send(question3)
@@ -192,7 +192,7 @@ describe("CRUD posts", () => {
                     done();
                 })
         }),
-        test.only("failed create posts questions by user POST /posts with missing description field", (done) => {
+        test("failed create posts questions by user POST /posts with missing description field", (done) => {
             request(app)
                 .post('/post')
                 .send(question4)
@@ -206,7 +206,7 @@ describe("CRUD posts", () => {
                     done();
                 })
         }),
-        test.only("failed update posts questions by superuser PUT /posts/:id missing question field", (done) => {
+        test("failed update posts questions by superuser PUT /posts/:id missing question field", (done) => {
             request(app)
                 .put(`/post/${PostId}`)
                 .send(question3)
@@ -219,7 +219,7 @@ describe("CRUD posts", () => {
                     done();
                 })
         }),
-        tes.onlyt("failed update posts questions by superuser PUT /posts/:id missing description field", (done) => {
+        test("failed update posts questions by superuser PUT /posts/:id missing description field", (done) => {
             request(app)
                 .put(`/post/${PostId}`)
                 .send(question4)
@@ -232,7 +232,7 @@ describe("CRUD posts", () => {
                     done();
                 })
         }),
-        test.only("failed update posts questions by user PUT /posts/:id missing question field", (done) => {
+        test("failed update posts questions by user PUT /posts/:id missing question field", (done) => {
             request(app)
                 .put(`/post/${PostId}`)
                 .send(question3)
@@ -245,7 +245,7 @@ describe("CRUD posts", () => {
                     done();
                 })
         }),
-        test.only("failed update posts questions by user PUT /posts/:id missing description field", (done) => {
+        test("failed update posts questions by user PUT /posts/:id missing description field", (done) => {
             request(app)
                 .put(`/post/${PostId}`)
                 .send(question4)
@@ -258,9 +258,9 @@ describe("CRUD posts", () => {
                     done();
                 })
         }),       
-        test.only("delete posts questions DELETE /posts/:id", (done) => {
+        test("delete posts questions DELETE /posts/:id", (done) => {
             request(app)
-                .delete(`/posts/${successPostId}`)
+                .delete(`/post/${successPostId}`)
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {
                     const { body, status } = res

@@ -57,7 +57,7 @@ class AnswerController {
 
   static createAnswers(req, res, next) {
     const { description } = req.body;
-    console.log(req.loggedInUser, 'lalala')
+    // console.log(req.loggedInUser, 'lalala')
     Answer.create({
       description,
       PostId: req.params.PostId,
@@ -79,8 +79,8 @@ class AnswerController {
         UserId: 1, // dari userLogin
       },
     })
-      .then((data) => {
-        console.log(data, "<<<");
+      .then(() => {
+        // console.log(data, "<<<");
         res.status(200).json({ message: "Data success deleted" });
       })
       .catch((err) => {
