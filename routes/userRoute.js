@@ -1,6 +1,11 @@
 const route = require('express').Router()
 const UserController = require('../controllers/userController')
 const authentication = require('../midddlewares/authentication')
+<<<<<<< HEAD
+
+route.post('/googleLogin', UserController.googleLogin)
+=======
+>>>>>>> development
 
 route.post('/googleLogin', UserController.googleLogin)
 

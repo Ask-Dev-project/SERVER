@@ -118,18 +118,18 @@ describe("CRUD posts", () => {
                     done();
                 })
         }),
-        // test("get posts by category GET /post/category", (done) => {
-        //     console.log(category, 'ini laiii')
-        //     request(app)
-        //         .get(`/post/${category}`)
-        //         .set('access_token', access_token_superuser)
-        //         .end(function (err, res) {
-        //             const { body, status } = res
-        //             if (err) return done(err);
-        //             expect(status).toBe(200)
-        //             done();
-        //         })
-        // }),
+        test("get posts by category GET /post/category", (done) => {
+            console.log(category, 'ini laiii')
+            request(app)
+                .get(`/post/category?name=${category}`)
+                .set('access_token', access_token_superuser)
+                .end(function (err, res) {
+                    const { body, status } = res
+                    if (err) return done(err);
+                    expect(status).toBe(200)
+                    done();
+                })
+        }),
         test("update superuser posts PUT /posts/:id", (done) => {
             request(app)
             .put(`/post/${PostId}`)
@@ -179,6 +179,19 @@ describe("CRUD posts", () => {
         test("failed get all posts GET /post/id", (done) => {
             request(app)
                 .get('/post/a')
+                .set('access_token', access_token_superuser)
+                .end(function (err, res) {
+                    const { body, status } = res
+                    if (err) return done(err);
+                    expect(status).toBe(500)
+                    expect(body).toHaveProperty("message", "Internal Server Error!")
+                    done();
+                })
+        }),
+        test("failed get posts by category GET /post/category", (done) => {
+            console.log(category, 'ini laiii')
+            request(app)
+                .get(`/post/category?namee=${category}`)
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {
                     const { body, status } = res
