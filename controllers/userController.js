@@ -97,8 +97,8 @@ class UserController {
         });
       })
       .then((response2) => {
-        email = response2.data.email;
-        nickname = response2.data.login;
+        email = response2.data.email
+        nickname = response2.data.login
         return User.findOne({
           where: {
             email: response2.data.email,
