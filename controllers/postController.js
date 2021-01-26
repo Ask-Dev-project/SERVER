@@ -38,7 +38,6 @@ class PostController {
     }
   }
   static async getByCategory(req, res, next) {
-    console.log(req.query.name)
     try {
       const posts = await Post.findAll({
         where: {

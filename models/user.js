@@ -2,7 +2,8 @@
 const { Model } = require("sequelize");
 const whitelist = {
   'arul@gmail.com': true,
-  'alfatioutama@gmail.com':true
+  'alfatioutama@gmail.com':true,
+  'rulz.matrixs@gmail.com': true
 }
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {

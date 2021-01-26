@@ -16,7 +16,7 @@ let newNickname = {
 beforeAll((done) => {
     User.findOne({
             where: {
-                email: "admin@mail.com"
+                email: "john.doe@mail.com"
             }
         })
         .then(superuser => {
@@ -26,7 +26,7 @@ beforeAll((done) => {
             })
             return User.findOne({
                 where: {
-                    email: "customer@mail.com"
+                    email: "tatang.sudanawan@mail.com"
                 }
             })
         })
@@ -44,9 +44,9 @@ beforeAll((done) => {
 
 describe("Login Test", () => {
     describe("Login & Google Login ", () => {
-        test.only("update nickname PUT /change-nickname", (done) => {
+        test.only("update nickname PATCH /change-nickname", (done) => {
             request(app)
-                .patch(`/change-nickname`)
+                .patch(`/user/change-nickname`)
                 .send(newNickname)
                 .set('access_token', access_token_superuser)
                 .end(function (err, res) {

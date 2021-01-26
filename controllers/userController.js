@@ -27,7 +27,7 @@ class UserController {
           status: findUser.status,
           nickname: findUser.nickname,
         });
-        res.status(200).json(token);
+        res.status(200).json({access_token: token, nickname: findUser.nickname});
       } else {
         const createUser = await User.create({
           email: payload.email,
@@ -39,14 +39,13 @@ class UserController {
           status: createUser.status,
           nickname: createUser.nickname,
         });
-        res.status(200).json(token);
+        res.status(200).json({access_token: token, nickname: createUser.nickname});
       }
     } catch (error) {
       next(error);
     }
   }
   static async changeNickname(req, res, next) {
-    console.log('masukk')
     const user = req.loggedInUser;
     const { nickname } = req.body;
     try {
