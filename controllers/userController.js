@@ -3,10 +3,9 @@ const Jwt = require("../helper/jwt");
 const createError = require("http-errors");
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.googleClient);
-const axios = require("axios");
+const axios = require("axios").default
 const clientId = process.env.clientId;
 const clientSecret = process.env.clientSecret;
-let token = null;
 
 class UserController {
   static async googleLogin(req, res, next) {
@@ -69,7 +68,7 @@ class UserController {
       `https://github.com/login/oauth/authorize?client_id=${clientId}`
     );
   }
-  static callBack(req, res, next) {
+  static async callBack(req, res, next) {
     const body = {
       client_id: clientId,
       client_secret: clientSecret,
@@ -78,14 +77,22 @@ class UserController {
     const opts = { headers: { accept: "application/json" } };
     axios
       .post(`https://github.com/login/oauth/access_token`, body, opts)
-      .then((res) => {
-        console.log(res);
-        return res.data["access_token"];
+      .then((response) => {
+        return response.data["access_token"];
       })
       .then((_token) => {
-        console.log("My token:", _token);
-        token = _token;
-        res.json({ ok: 1 });
+        // console.log("My token:", _token);
+        return axios.get("https://api.github.com/user",{
+          headers:{
+            accept : 'application/json,application/vnd.github.v3+json',
+            'user-agent': 'node.js',
+            authorization: `token ${_token}`
+          }
+        })
+      })
+      .then( response2 => {
+        console.log(response2.data)
+        res.status(200).json({message: 'ok'})
       })
       .catch((err) => res.status(500).json({ message: err.message }));
   }
