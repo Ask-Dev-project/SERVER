@@ -35,9 +35,10 @@ io.on('connection', socket => {
     socket.join(roomId)
     socket.to(roomId).broadcast.emit('user-connected', userId)
 
-    socket.on('disconnect', () => {
-      socket.to(roomId).broadcast.emit('user-disconnected', userId)
-    })
+  })
+  socket.on('leave-room',obj => {
+    delete rooms[obj.roomId][obj.name]
+    if(Object.keys(rooms[obj.roomId]).length < 1) delete rooms[obj.roomId]
   })
   socket.on('stop-sharing', roomId => {
     socket.to(roomId).broadcast.emit('stop-sharing')
