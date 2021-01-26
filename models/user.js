@@ -20,7 +20,14 @@ module.exports = (sequelize, DataTypes) => {
     {
       email: DataTypes.STRING,
       status: DataTypes.STRING,
-      nickname: DataTypes.STRING,
+      nickname: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty:{
+            msg: 'Nickname is required'
+          }
+        }
+      },
       rating: DataTypes.FLOAT,
     },
     {

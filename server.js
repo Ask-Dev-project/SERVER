@@ -51,3 +51,5 @@ io.on('connection', socket => {
 server.listen(PORT, () => {
   console.log(`listening web in http://localhost:${PORT}`);
 });
+
+module.exports = server
