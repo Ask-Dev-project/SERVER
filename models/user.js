@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const whitelist = {
-  'arul@gmail.com': true
+  'rulz.matrixs@gmail.com': true
 }
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -26,18 +26,18 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "User",
-      // hooks: {
-      //   beforeCreate(user) {
-      //     if (whitelist[user.email] == true) {
-      //       user.status = "superuser";
-      //     } else {
-      //       user.status = "user";
-      //     }
-      //     if(!user.nickname){
-      //       user.nickname = user.email.split('@')[0] 
-      //     }  
-      //   },
-      // },
+      hooks: {
+        beforeCreate(user) {
+          if (whitelist[user.email] == true) {
+            user.status = "superuser";
+          } else {
+            user.status = "user";
+          }
+          if(!user.nickname){
+            user.nickname = user.email.split('@')[0] 
+          }  
+        },
+      },
     }
   );
   return User;

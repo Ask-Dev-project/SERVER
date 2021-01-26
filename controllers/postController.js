@@ -37,27 +37,27 @@ class PostController {
       next(error);
     }
   }
-  // static async getByCategory(req, res, next) {
-  //   try {
-  //     const posts = await Post.findAll({
-  //       where: {
-  //         category: req.query.name,
-  //       },
-  //       order: [["id", "DESC"]],
-  //       include: [
-  //         {
-  //           model: User,
-  //         },
-  //         {
-  //           model: Answer,
-  //         },
-  //       ],
-  //     });
-  //     res.status(200).json(posts);
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+  static async getByCategory(req, res, next) {
+    try {
+      const posts = await Post.findAll({
+        where: {
+          category: req.query.name,
+        },
+        order: [["id", "DESC"]],
+        include: [
+          {
+            model: User,
+          },
+          {
+            model: Answer,
+          },
+        ],
+      });
+      res.status(200).json(posts);
+    } catch (error) {
+      next(error);
+    }
+  }
   static async create(req, res, next) {
     const user = req.loggedInUser;
     const { question, description, category } = req.body;
