@@ -11,18 +11,12 @@ const clientSecret = process.env.clientSecret;
 class UserController {
   static async googleLogin(req, res, next) {
     try {
-<<<<<<< HEAD
-      console.log('sebelum')
-=======
->>>>>>> development
+      console.log('sebelum');
       const ticket = await client.verifyIdToken({
         idToken: req.body.googleToken,
         audience: process.env.googleClient,
       });
-<<<<<<< HEAD
-      console.log('sesudah')
-=======
->>>>>>> development
+      console.log('sesudah');
       const payload = ticket.getPayload();
       const findUser = await User.findOne({
         where: {
