@@ -2,8 +2,9 @@ const { User, Answer, Post } = require("../models/index");
 const Jwt = require("../helper/jwt");
 const createError = require("http-errors");
 const { OAuth2Client } = require("google-auth-library");
+const { response } = require("express");
 const client = new OAuth2Client(process.env.googleClient);
-const axios = require("axios").default
+const axios = require("axios").default;
 const clientId = process.env.clientId;
 const clientSecret = process.env.clientSecret;
 
@@ -27,7 +28,9 @@ class UserController {
           status: findUser.status,
           nickname: findUser.nickname,
         });
-        res.status(200).json({access_token: token, nickname: findUser.nickname});
+        res
+          .status(200)
+          .json({ access_token: token, nickname: findUser.nickname });
       } else {
         const createUser = await User.create({
           email: payload.email,
@@ -39,7 +42,9 @@ class UserController {
           status: createUser.status,
           nickname: createUser.nickname,
         });
-        res.status(200).json({access_token: token, nickname: createUser.nickname});
+        res
+          .status(200)
+          .json({ access_token: token, nickname: createUser.nickname });
       }
     } catch (error) {
       next(error);
@@ -57,7 +62,7 @@ class UserController {
           },
         }
       );
-      res.status(201).json({message: 'Data success updated'});
+      res.status(201).json({ message: "Data success updated" });
     } catch (error) {
       next(error);
     }
@@ -73,6 +78,7 @@ class UserController {
       client_secret: clientSecret,
       code: req.query.code,
     };
+    let email, nickname;
     const opts = { headers: { accept: "application/json" } };
     axios
       .post(`https://github.com/login/oauth/access_token`, body, opts)
@@ -80,18 +86,49 @@ class UserController {
         return response.data["access_token"];
       })
       .then((_token) => {
-        // console.log("My token:", _token);
-        return axios.get("https://api.github.com/user",{
-          headers:{
-            accept : 'application/json,application/vnd.github.v3+json',
-            'user-agent': 'node.js',
-            authorization: `token ${_token}`
-          }
-        })
+        return axios.get("https://api.github.com/user", {
+          headers: {
+            accept: "application/json,application/vnd.github.v3+json",
+            "user-agent": "node.js",
+            authorization: `token ${_token}`,
+          },
+        });
       })
-      .then( response2 => {
-        console.log(response2.data)
-        res.status(200).json({message: 'ok'})
+      .then((response2) => {
+        email = response2.data.email;
+        nickname = response2.data.login;
+        return User.findOne({
+          where: {
+            email: response2.data.email,
+          },
+        });
+      })
+      .then((user) => {
+        if (user) {
+          const token = Jwt.Sign({
+            id: user.id,
+            email: user.email,
+            status: user.status,
+            nickname: user.nickname,
+          });
+          res
+            .status(200)
+            .json({ access_token: token, nickname: user.nickname });
+        } else {
+          return User.create({
+            email: email,
+            nickname: nickname,
+          });
+        }
+      })
+      .then((user) => {
+        const token = Jwt.Sign({
+          id: user.id,
+          email: user.email,
+          status: user.status,
+          nickname: user.nickname,
+        });
+        res.status(200).json({ access_token: token, nickname: user.nickname });
       })
       .catch((err) => res.status(500).json({ message: err.message }));
   }
