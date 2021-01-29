@@ -62,6 +62,7 @@ class PostController {
     const user = req.loggedInUser;
     const { question, description, category } = req.body;
     try {
+      console.log(req.body)
       const post = await Post.create({
         question,
         description,
